@@ -1,0 +1,21 @@
+reg log_duration distance_between_job_and_organiz, vce(robust)
+est store Specification1
+reghdfe log_duration distance_between_job_and_organiz posting_count salary_dummy, absorb(quarter_of_date organization_ID) vce(robust)
+est store Specification2
+reghdfe log_duration distance_between_job_and_organiz posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(robust)
+est store Specification3
+reghdfe log_duration distance_between_job_and_organiz posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(cluster organization_ID)
+est store Specification4
+est tab Specification1 Specification2 Specification3 Specification4, star
+reghdfe log_duration distance_between_job_and_organiz posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm BB , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(robust)
+est store Spec1
+reghdfe log_duration distance_between_job_and_organiz posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm BH , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(robust)
+est store Spec2
+reghdfe log_duration distance_between_job_and_organiz posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm AX , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(robust)
+est store Spec3
+est tab Spec1 Spec2 Spec3, star
+est tab Spec1 Spec2 Spec3, se
+gen same_city=0
+replace same_city=1 if distance_between_job_and_organiz <= 30
+reghdfe log_duration same_city posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(robust)
+reghdfe log_duration same_city distance_between_job_and_organiz posting_count salary_dummy education_level_cluster_Universi Applicant_language_cluster_Germa contract_type_label_cluster_Perm , absorb( quarter_of_date organization_ID profession_isco_code_value_agg_2 region_value ) vce(robust)
